@@ -1,0 +1,78 @@
+div#menu {
+	width: 49%;
+	height:100%;
+}
+
+div#frigo {
+	width: 49%;
+	height: 100%;
+	background-color: lightblue;
+	position: fixed;
+	right: 0;
+	top: 0;
+}
+
+.menu-item {
+	border: 1px solid red;
+	width: 100%;
+	height: 140px;
+	margin: 5px auto;
+}
+
+.immagine img {
+	height: 120px;
+	margin: 10px;
+}
+
+.immagine {
+	float: left;
+}
+
+.dettagli {
+	padding: 10px;
+}
+
+.dettagli h2 {
+	margin-bottom: 4px;
+}
+
+.dettagli p {
+	margin-top: 4px;
+}
+
+.ingredienti {
+	font-size: 80%;
+	font-style: italic;
+}
+
+.text-center {
+	text-align:center;
+}
+
+.float-right {
+	float:right;
+}
+
+#listaCucina ul {
+	list-style-type: circle;
+	padding-right: 40px;
+}
+
+#listaCucina ul li {
+	display: block;
+	padding: 10px;
+	border:1px solid blue;
+}
+
+.sezione-menu {
+	background-color:blue; 
+	color:white
+}
+
+#spesa {
+	margin-top: 40px;
+}
+
+#spesa input {
+	font-size: 140%;
+}

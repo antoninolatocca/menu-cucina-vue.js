@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>My app</title>
+		<link rel="stylesheet" type="text/css" href="style.css">
+	</head>
+	<body>
+		
+		<div class="nav-bar"></div>
+		
+		<div id="app">
+			
+			<div id="menu">
+				<h1 class="text-center">Menu</h1>
+				
+				<div class="text-center sezione-menu">
+					<h2>Pizze</h2>
+				</div>
+				<div class="menu-item" v-for="pizza in pizze">
+					<div class="immagine">
+						<a v-bind:href="pizza.url">
+							<img v-bind:src="pizza.immagine" v-bind:alt="pizza.descrizione">
+						</a>
+					</div>
+					<div class="dettagli">
+						<h2>{{ pizza.nome }}</h2>
+						<p><span class="ingredienti">{{ pizza.ingredienti.join(', ') }} </p>
+						<small v-if="disponibile(pizza.ingredienti, cucina)">€ {{pizza.prezzo}}</small>
+						<small v-else="disponibile(pizza.ingredienti, cucina)">Non disponibile</small>
+					</div>		
+				</div>
+				
+				<div class="text-center sezione-menu">
+					<h2>Risotti</h2>
+				</div>
+				<div class="menu-item" v-for="risotto in risotti">
+					<div class="immagine">
+						<a v-bind:href="risotto.url">
+							<img v-bind:src="risotto.immagine" v-bind:alt="risotto.descrizione">
+						</a>
+					</div>
+					<div class="dettagli">
+						<h2>{{ risotto.nome }}</h2>
+						<p><span class="ingredienti">{{ risotto.ingredienti.join(', ') }} </p>
+						<small v-if="disponibile(risotto.ingredienti, cucina)">€ {{risotto.prezzo}}</small>
+						<small v-else="disponibile(risotto.ingredienti, cucina)">Non disponibile</small>
+					</div>		
+				</div>
+			</div>
+			<div id="frigo">
+				<h1 class="text-center">Cucina</h1>
+				<div id="listaCucina">
+					<ul>
+						<li v-for="cibo in cucina">{{ cibo }}<span class="float-right">
+							<button v-on:click="esaurisci(cibo, cucina)">x</button></span>
+						</li>
+					</ul>
+				</div>
+				<div id="spesa" class="text-center">
+					<label for="nuovoIngrediente">Aggiungi i nuovi prodotti disponibili in cucina</label><br/><br/>
+					<input type="text" id="nuovoIngrediente">
+					<input type="submit" value="+" v-on:click="spesa(document.getElementById('nuovoIngrediente'), cucina)">
+				</div>
+			</div>
+		</div>
+		
+		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+		<script src="main.js"></script>
+	</body>
+</html>
