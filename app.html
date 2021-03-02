@@ -1,69 +1,94 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>My app</title>
-		<link rel="stylesheet" type="text/css" href="style.css">
+		<title>My Restaurant App</title>
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
 	</head>
 	<body>
 		
 		<div class="nav-bar"></div>
 		
 		<div id="app">
-			
-			<div id="menu">
-				<h1 class="text-center">Menu</h1>
-				
-				<div class="text-center sezione-menu">
-					<h2>Pizze</h2>
-				</div>
-				<div class="menu-item" v-for="pizza in pizze">
-					<div class="immagine">
-						<a v-bind:href="pizza.url">
-							<img v-bind:src="pizza.immagine" v-bind:alt="pizza.descrizione">
-						</a>
+
+			<div class="container-fluid">
+
+				<div class="row">
+
+					<div id="menu" class="col-lg-6">
+						<h2 class="text-center py-2">Menu</h2>
+
+						<div class="row my-2">
+							<div class="col-lg-12">
+								<div class="form-outline float-left mr-2">
+									<input type="search" id="search-menu" class="form-control" placeholder="Cerca" aria-label="Search" v-model:value="search" />
+								</div>
+								<div class="btn-group-toggle float-left mr-1" data-toggle="buttons">
+									<label class="btn btn-secondary active">
+									  <input type="checkbox" autocomplete="off" v-on:click="filtro = !filtro"> Filtra
+									</label>
+								  </div>
+								<div class="float-right">
+									<button class="btn btn-primary float-left mr-1">+ Sezione</button>
+									<button class="btn btn-primary float-left mr-1">+ Piatto</button>
+									<button class="btn btn-success float-left mr-1" onclick="window.print()">Stampa</button>
+								</div>
+							</div>
+						</div>
+
+						<div class="pagina py-2" v-for="sezione in menu">
+							<button class="btn btn-dark d-block w-100 btn-lg">
+								{{ sezione.nome }} <span class="badge bg-warning">{{ sezione.lista.length }}</span>
+							</button>
+							<div class="menu-item" v-for="piatto in sezione.lista" 
+								v-if="
+									(disponibile(piatto.ingredienti, cucina) && piatto.nome.toLowerCase().includes(search.toLowerCase()))
+									|| (disponibile(piatto.ingredienti, cucina) && !search)
+									|| (!disponibile(piatto.ingredienti, cucina) && !filtro && piatto.nome.toLowerCase().includes(search.toLowerCase()))
+									|| (!disponibile(piatto.ingredienti, cucina) && !filtro && !search)
+								"
+							>
+								<div class="immagine">
+									<a v-bind:href="piatto.url">
+										<img v-bind:src="piatto.immagine" v-bind:alt="piatto.descrizione">
+									</a>
+								</div>
+								<div class="dettagli">
+									<h2>{{ piatto.nome }}</h2>
+									<p><span class="ingredienti">{{ piatto.ingredienti.join(', ') }} </p>
+									<span class="float-right badge bg-primary text-light py-2 px-3 my-2" v-if="disponibile(piatto.ingredienti, cucina)"><p class="m-0">€ {{piatto.prezzo}}</p></span>
+									<span class="float-right badge bg-danger text-light py-2 px-3 my-2" v-else="disponibile(piatto.ingredienti, cucina)"><p class="m-0">Non disponibile</p></span>
+								</div>
+							</div>
+						</div>
 					</div>
-					<div class="dettagli">
-						<h2>{{ pizza.nome }}</h2>
-						<p><span class="ingredienti">{{ pizza.ingredienti.join(', ') }} </p>
-						<small v-if="disponibile(pizza.ingredienti, cucina)">€ {{pizza.prezzo}}</small>
-						<small v-else="disponibile(pizza.ingredienti, cucina)">Non disponibile</small>
-					</div>		
-				</div>
-				
-				<div class="text-center sezione-menu">
-					<h2>Risotti</h2>
-				</div>
-				<div class="menu-item" v-for="risotto in risotti">
-					<div class="immagine">
-						<a v-bind:href="risotto.url">
-							<img v-bind:src="risotto.immagine" v-bind:alt="risotto.descrizione">
-						</a>
+
+					<div id="frigo" class="col-lg-6">
+						<h2 class="text-center py-2">Cucina</h2>
+						<div id="listaCucina">
+							<ul>
+								<li v-for="cibo in cucina">{{ cibo }}
+									<span class="float-right">
+										<input type="number" class="quantity" name="inputNumber" value="1" placeholder="Quant." min="0">
+										<button v-on:click="esaurisci(cibo, cucina)" class="btn btn-danger my-0 py-0" title="Finito">x</button>
+									</span>
+								</li>
+							</ul>
+						</div>
+						<div id="spesa" class="text-center">
+							<label for="nuovoIngrediente">Aggiungi i nuovi prodotti disponibili in cucina</label><br/><br/>
+							<input type="text" id="nuovoIngrediente">
+							<input type="submit" value="+" v-on:click="spesa(document.getElementById('nuovoIngrediente'), cucina)">
+						</div>
 					</div>
-					<div class="dettagli">
-						<h2>{{ risotto.nome }}</h2>
-						<p><span class="ingredienti">{{ risotto.ingredienti.join(', ') }} </p>
-						<small v-if="disponibile(risotto.ingredienti, cucina)">€ {{risotto.prezzo}}</small>
-						<small v-else="disponibile(risotto.ingredienti, cucina)">Non disponibile</small>
-					</div>		
+
 				</div>
+
 			</div>
-			<div id="frigo">
-				<h1 class="text-center">Cucina</h1>
-				<div id="listaCucina">
-					<ul>
-						<li v-for="cibo in cucina">{{ cibo }}<span class="float-right">
-							<button v-on:click="esaurisci(cibo, cucina)">x</button></span>
-						</li>
-					</ul>
-				</div>
-				<div id="spesa" class="text-center">
-					<label for="nuovoIngrediente">Aggiungi i nuovi prodotti disponibili in cucina</label><br/><br/>
-					<input type="text" id="nuovoIngrediente">
-					<input type="submit" value="+" v-on:click="spesa(document.getElementById('nuovoIngrediente'), cucina)">
-				</div>
-			</div>
+
 		</div>
 		
+		<script src="js/bootstrap.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
 		<script src="main.js"></script>
 	</body>
